@@ -3,6 +3,7 @@ import { Inter, Playfair_Display, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import "aos/dist/aos.css";
 import AosInitializer from "@/components/AosInitializer";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair" });
@@ -43,6 +44,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable} ${cormorant.variable} bg-primary text-off-white font-body antialiased min-h-screen flex flex-col`}>
         <AosInitializer />
         {children}
+        <Analytics />
       </body>
     </html>
   );
