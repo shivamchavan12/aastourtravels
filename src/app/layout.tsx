@@ -10,6 +10,7 @@ const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfa
 const cormorant = Cormorant_Garamond({ weight: ["400", "600"], subsets: ["latin"], variable: "--font-cormorant" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.aastourtravels.in"),
   title: "AAS Tour & Travels",
   description: "All Services Under One Roof - Property, Visa, Travel, Legal & More.",
   icons: {
@@ -40,7 +41,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth overflow-x-hidden">
       <body className={`${inter.variable} ${playfair.variable} ${cormorant.variable} bg-primary text-off-white font-body antialiased min-h-screen flex flex-col`}>
         <AosInitializer />
         {children}

@@ -12,12 +12,17 @@
   --font-accent: var(--font-cormorant);
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background-color: var(--color-primary);
   color: var(--color-off-white);
   font-family: var(--font-body);
   scroll-behavior: smooth;
   overflow-x: hidden;
+  max-width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
