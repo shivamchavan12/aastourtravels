@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
-import { MapPin, Phone, Mail, Globe, Send, CheckCircle2 } from "lucide-react";
+import { useState, useRef } from "react";
+import emailjs from "@emailjs/browser";
+import { MapPin, Phone, Mail, Globe, Send, CheckCircle2, Loader2, AlertCircle } from "lucide-react";
 
 type FormData = {
   name: string;
+  email: string;
   phone: string;
   service: string;
   message: string;
@@ -17,6 +19,11 @@ function validate(data: FormData): FormErrors {
     errors.name = "Name is required.";
   } else if (data.name.trim().length < 2) {
     errors.name = "Name must be at least 2 characters.";
+  }
+  if (!data.email.trim()) {
+    errors.email = "Email address is required.";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim())) {
+    errors.email = "Enter a valid email address.";
   }
   if (!data.phone.trim()) {
     errors.phone = "Phone number is required.";
@@ -41,27 +48,53 @@ const fieldClass = (error?: string) =>
   }`;
 
 export default function Contact() {
-  const [form, setForm] = useState<FormData>({ name: "", phone: "", service: "", message: "" });
+  const formRef = useRef<HTMLFormElement>(null);
+  const [form, setForm] = useState<FormData>({ name: "", email: "", phone: "", service: "", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-    // Clear error on typing
     if (errors[name as keyof FormData]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+    if (sendError) setSendError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate(form);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
-    setSubmitted(true);
+
+    setLoading(true);
+    setSendError(null);
+
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          from_name: form.name,
+          reply_to: form.email,
+          phone: form.phone,
+          service: form.service,
+          message: form.message,
+        },
+        { publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY! }
+      );
+      setSubmitted(true);
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      setSendError("Something went wrong. Please try again or contact us directly.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -106,8 +139,8 @@ export default function Contact() {
                 <Mail className="text-[#C9A84C] mt-1 flex-shrink-0" size={24} />
                 <div>
                   <h4 className="font-bold text-off-white mb-1">Email Address</h4>
-                  <a href="mailto:tourstravelsaas@gmail.com" className="text-gray-400 text-sm hover:text-[#C9A84C] transition-colors">
-                    tourstravelsaas@gmail.com
+                  <a href="mailto:aastoursandtravels0814@gmail.com" className="text-gray-400 text-sm hover:text-[#C9A84C] transition-colors">
+                    aastoursandtravels0814@gmail.com
                   </a>
                 </div>
               </div>
@@ -121,7 +154,7 @@ export default function Contact() {
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <svg className="text-[#C9A84C] mt-1 flex-shrink-0" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                <svg className="text-[#C9A84C] mt-1 flex-shrink-0" width={24} height={24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
                 <div>
                   <h4 className="font-bold text-off-white mb-1">Instagram</h4>
                   <a
@@ -149,14 +182,14 @@ export default function Contact() {
                   Thank you for reaching out. Our team will get back to you shortly.
                 </p>
                 <button
-                  onClick={() => { setSubmitted(false); setForm({ name: "", phone: "", service: "", message: "" }); }}
+                  onClick={() => { setSubmitted(false); setSendError(null); setForm({ name: "", email: "", phone: "", service: "", message: "" }); }}
                   className="mt-4 text-sm text-[#C9A84C] underline underline-offset-4 hover:text-[#F0D080] transition-colors"
                 >
                   Send another message
                 </button>
               </div>
             ) : (
-              <form className="space-y-6" onSubmit={handleSubmit} noValidate>
+              <form ref={formRef} className="space-y-6" onSubmit={handleSubmit} noValidate>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div className="space-y-1">
@@ -189,6 +222,22 @@ export default function Contact() {
                     />
                     {errors.phone && <p className="text-red-400 text-xs mt-1">{errors.phone}</p>}
                   </div>
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1">
+                  <label className="text-sm font-medium text-gray-300">
+                    Your Email <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    className={fieldClass(errors.email)}
+                    placeholder="you@example.com"
+                  />
+                  {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email}</p>}
                 </div>
 
                 {/* Service */}
@@ -229,12 +278,30 @@ export default function Contact() {
                   {errors.message && <p className="text-red-400 text-xs mt-1">{errors.message}</p>}
                 </div>
 
+                {/* Error Banner */}
+                {sendError && (
+                  <div className="flex items-start gap-3 bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-3 text-red-400 text-sm">
+                    <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+                    <span>{sendError}</span>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="bg-[#C9A84C] text-primary font-bold px-8 py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-[#F0D080] transition-all w-full md:w-auto"
+                  disabled={loading}
+                  className="bg-[#C9A84C] text-primary font-bold px-8 py-4 rounded-lg flex items-center justify-center gap-2 hover:bg-[#F0D080] transition-all w-full md:w-auto disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  <Send size={18} />
-                  Submit Message
+                  {loading ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send size={18} />
+                      Submit Message
+                    </>
+                  )}
                 </button>
               </form>
             )}
