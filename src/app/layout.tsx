@@ -64,6 +64,9 @@ export const metadata: Metadata = {
       "Your trusted travel partner providing complete travel & lifestyle solutions for families, businesses, and groups.",
     images: ["https://www.aastourtravels.in/logo2.png"],
   },
+  verification: {
+    google: "kbc_vw4b8M4OL6E583MEYiCDExPx6NTg4n2oEUxgBQo",
+  },
 };
 
 const jsonLd = {
