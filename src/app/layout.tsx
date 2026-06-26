@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: "AAS Tour & Travels",
     images: [
       {
-        url: "/logo2.png",
+        url: "https://www.aastourtravels.in/logo2.png",
         width: 1200,
         height: 630,
         alt: "AAS Tour & Travels — Premium Travel Services",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     title: "AAS Tour & Travels",
     description:
       "Premium travel, visa, property & lifestyle services in Bhopal, MP. All services under one roof.",
-    images: ["/logo2.png"],
+    images: ["https://www.aastourtravels.in/logo2.png"],
   },
 };
 

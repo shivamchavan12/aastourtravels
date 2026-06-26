@@ -1,179 +1,92 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-function LogoMark() {
-  return (
-    <svg
-      viewBox="0 0 520 360"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-auto"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="ls-blue" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#38BDF8" />
-          <stop offset="100%" stopColor="#0EA5E9" />
-        </linearGradient>
-        <linearGradient id="ls-white" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="100%" stopColor="#CBD5E1" />
-        </linearGradient>
-        <linearGradient id="ls-orange" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#F97316" />
-          <stop offset="100%" stopColor="#FB923C" />
-        </linearGradient>
-      </defs>
-
-      {/* Decorative top rule */}
-      <line x1="120" y1="62" x2="400" y2="62" stroke="url(#ls-blue)" strokeWidth="1.5" opacity="0.6" />
-
-      {/* Tiny airplane glyph */}
-      <g transform="translate(260, 38) rotate(-35)" fill="url(#ls-blue)" opacity="0.9">
-        <path d="M0 -10 L3 -1 L20 3 L20 6 L3 5 L0 14 L5 19 L5 21 L0 19 L-5 21 L-5 19 L0 14 L-3 5 L-20 6 L-20 3 L-3 -1 Z" />
-      </g>
-
-      {/* "AAS" */}
-      <text
-        x="260"
-        y="210"
-        textAnchor="middle"
-        fontFamily="Inter, sans-serif"
-        fontSize="160"
-        fontWeight="800"
-        fill="url(#ls-white)"
-        letterSpacing="10"
-      >
-        AAS
-      </text>
-
-      {/* Thin rule */}
-      <line x1="155" y1="248" x2="365" y2="248" stroke="url(#ls-blue)" strokeWidth="1" opacity="0.7" />
-
-      {/* "TOUR & TRAVELS" */}
-      <text
-        x="260"
-        y="286"
-        textAnchor="middle"
-        fontFamily="Inter, sans-serif"
-        fontSize="32"
-        fontWeight="600"
-        letterSpacing="5"
-        fill="url(#ls-blue)"
-      >
-        TOUR &amp; TRAVELS
-      </text>
-
-      {/* Bottom diamond accent */}
-      <g opacity="0.7">
-        <line x1="198" y1="316" x2="238" y2="316" stroke="url(#ls-orange)" strokeWidth="1.5" />
-        <path d="M260 309 L267 316 L260 323 L253 316 Z" fill="url(#ls-orange)" />
-        <line x1="282" y1="316" x2="322" y2="316" stroke="url(#ls-orange)" strokeWidth="1.5" />
-      </g>
-    </svg>
-  );
-}
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 export default function LaunchScreen({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
   const onCompleteRef = useRef(onComplete);
-  useEffect(() => { onCompleteRef.current = onComplete; });
+  
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  });
 
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("hold"), 700);
-    const t2 = setTimeout(() => setPhase("exit"), 3200);
-    const t3 = setTimeout(() => onCompleteRef.current(), 3900);
+    // 1. Enter (0ms - 800ms)
+    const t1 = setTimeout(() => setPhase("hold"), 800);
+    // 2. Hold & load bar (800ms - 2800ms)
+    const t2 = setTimeout(() => setPhase("exit"), 2800);
+    // 3. Exit animation completes (2800ms - 3500ms)
+    const t3 = setTimeout(() => onCompleteRef.current(), 3500);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, []);
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden transition-all duration-700 ${
-        phase === "exit" ? "opacity-0 scale-105 blur-sm pointer-events-none" : "opacity-100 scale-100"
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        phase === "exit" ? "opacity-0 scale-105 blur-md pointer-events-none" : "opacity-100 scale-100 blur-0"
       }`}
-      style={{ background: "#0F172A" }}
+      style={{ background: "#020617" }}
+      aria-hidden="true"
     >
-      {/* Radial glow */}
+      {/* Background Mesh Gradients - Premium Apple Style */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute top-1/4 left-1/4 w-[600px] h-[600px] rounded-full pointer-events-none opacity-[0.15]"
         style={{
-          background:
-            "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(14,165,233,0.12) 0%, transparent 65%), radial-gradient(circle at 50% 50%, transparent 45%, #0F172A 100%)",
+          background: "radial-gradient(circle, #0EA5E9 0%, transparent 70%)",
+          transform: "translate(-50%, -50%)",
+          filter: "blur(100px)",
+        }}
+      />
+      <div
+        className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full pointer-events-none opacity-[0.15]"
+        style={{
+          background: "radial-gradient(circle, #38BDF8 0%, transparent 70%)",
+          transform: "translate(50%, 50%)",
+          filter: "blur(100px)",
         }}
       />
 
-      {/* Subtle dot grid */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "radial-gradient(rgba(14,165,233,0.08) 1.5px, transparent 1.5px)",
-          backgroundSize: "36px 36px",
-          maskImage: "radial-gradient(ellipse 65% 65% at 50% 50%, black 0%, transparent 75%)",
-          WebkitMaskImage: "radial-gradient(ellipse 65% 65% at 50% 50%, black 0%, transparent 75%)",
-        }}
-      />
-
-      {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {[...Array(12)].map((_, i) => (
-          <span
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              width: 2 + (i % 3),
-              height: 2 + (i % 3),
-              left: `${(i * 41) % 100}%`,
-              top: `${(i * 57) % 100}%`,
-              background: i % 3 === 0 ? "#F97316" : "#0EA5E9",
-              opacity: 0.15 + (i % 4) * 0.06,
-              animation: `floatY ${5 + (i % 5)}s ease-in-out infinite`,
-              animationDelay: `${i * 0.3}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Logo + tagline */}
-      <div
-        className={`relative flex flex-col items-center transition-all duration-1000 ease-out ${
-          phase === "enter"
-            ? "opacity-0 scale-95 translate-y-8 blur-sm"
-            : "opacity-100 scale-100 translate-y-0 blur-0"
-        }`}
-      >
-        <div style={{ width: 380, maxWidth: "88vw" }}>
-          <LogoMark />
+      {/* Main Content Container - Pure Typography */}
+      <div className="relative flex flex-col items-center justify-center">
+        <div className="overflow-hidden pb-2">
+          <motion.h1
+            initial={{ y: "100%", opacity: 0, rotateX: -20 }}
+            animate={{ y: 0, opacity: 1, rotateX: 0 }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50"
+            style={{ fontFamily: "var(--font-poppins)" }}
+          >
+            AAS TOUR &amp; TRAVELS
+          </motion.h1>
         </div>
 
         {/* Tagline */}
-        <div
-          className={`mt-4 flex items-center gap-4 transition-all duration-1000 delay-200 ${
-            phase === "enter" ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
-          }`}
-        >
-          <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#F97316]" />
-          <p
-            className="text-xs tracking-[0.45em] uppercase text-[#94A3B8]"
+        <div className="overflow-hidden pt-2">
+          <motion.p
+            initial={{ y: "-100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="text-[10px] md:text-xs font-semibold tracking-[0.5em] uppercase text-[#0EA5E9]"
             style={{ fontFamily: "var(--font-inter)" }}
           >
-            Your Trusted Travel Partner
-          </p>
-          <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#F97316]" />
+            Premium Travel &amp; Lifestyle
+          </motion.p>
         </div>
+      </div>
 
-        {/* Progress bar */}
-        <div
-          className="mt-8 w-52 h-[2px] rounded-full overflow-hidden"
-          style={{ background: "rgba(14,165,233,0.12)" }}
-        >
-          <div
-            className="h-full rounded-full"
-            style={{
-              background: "linear-gradient(90deg, #0EA5E9, #38BDF8, #F97316)",
-              animation: "loadBar 2.8s cubic-bezier(0.45,0,0.2,1) forwards",
-            }}
-          />
-        </div>
+      {/* Ultra-thin glowing loading line at the very bottom edge */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/[0.03]">
+        <motion.div
+          className="h-full w-1/2 bg-gradient-to-r from-transparent via-[#0EA5E9] to-transparent"
+          initial={{ x: "-200%" }}
+          animate={{ x: "200%" }}
+          transition={{
+            duration: 2.8,
+            ease: "easeInOut",
+          }}
+        />
       </div>
     </div>
   );
