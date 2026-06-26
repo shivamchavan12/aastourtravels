@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     apple: "/logo2.png",
   },
   openGraph: {
-    title: "AAS Tour & Travels | Premium Travel & Services in Bhopal",
+    title: "AAS Tour & Travels",
     description:
       "Your trusted travel partner providing complete travel & lifestyle solutions for families, businesses, and groups in Bhopal, MP.",
     url: "https://www.aastourtravels.in",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
         url: "https://www.aastourtravels.in/logo2.png",
         width: 1200,
         height: 630,
-        alt: "AAS Tour & Travels — Premium Travel Services",
+        alt: "AAS Tour & Travels",
       },
     ],
     locale: "en_IN",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AAS Tour & Travels",
     description:
-      "Premium travel, visa, property & lifestyle services in Bhopal, MP. All services under one roof.",
+      "Your trusted travel partner providing complete travel & lifestyle solutions for families, businesses, and groups.",
     images: ["https://www.aastourtravels.in/logo2.png"],
   },
 };
