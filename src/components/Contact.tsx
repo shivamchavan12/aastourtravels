@@ -139,8 +139,8 @@ export default function Contact() {
                 <Mail className="text-[#C9A84C] mt-1 flex-shrink-0" size={24} />
                 <div>
                   <h4 className="font-bold text-off-white mb-1">Email Address</h4>
-                  <a href="mailto:aastoursandtravels0814@gmail.com" className="text-gray-400 text-sm hover:text-[#C9A84C] transition-colors">
-                    aastoursandtravels0814@gmail.com
+                  <a href="mailto:tourstravelsaas@gmail.com" className="text-gray-400 text-sm hover:text-[#C9A84C] transition-colors">
+                    tourstravelsaas@gmail.com
                   </a>
                 </div>
               </div>
