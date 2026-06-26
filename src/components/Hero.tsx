@@ -1,67 +1,143 @@
+"use client";
+
 import Link from "next/link";
-import { ShieldCheck, Plane, Briefcase, FileText, Landmark, Car } from "lucide-react";
+import Image from "next/image";
+import { motion, type Variants } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
+const container: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.14, delayChildren: 0.25 },
+  },
+};
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+  },
+};
 
 export default function Hero() {
-  const badges = [
-    { name: "Property", icon: <Landmark size={16} /> },
-    { name: "Visa & Immigration", icon: <Plane size={16} /> },
-    { name: "Tours & Travel", icon: <Car size={16} /> },
-    { name: "Legal Docs", icon: <FileText size={16} /> },
-    { name: "Forex", icon: <Briefcase size={16} /> },
-    { name: "RTO", icon: <ShieldCheck size={16} /> },
-  ];
-
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background with radial glow */}
-      <div className="absolute inset-0 bg-primary z-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#C9A84C] opacity-[0.15] blur-[120px] rounded-full"></div>
+    <section
+      id="home"
+      className="relative flex flex-col justify-center overflow-hidden"
+      style={{ minHeight: "100svh" }}
+      aria-label="Hero section"
+    >
+      {/* ── Background — Ken Burns slow zoom out ── */}
+      <div className="absolute inset-0 z-0">
+        <motion.div
+          className="absolute inset-0"
+          initial={{ scale: 1.07 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 9, ease: "easeOut" }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=1920&q=85"
+            alt="Scenic travel landscape"
+            fill
+            priority
+            className="object-cover object-[center_30%] sm:object-center"
+            sizes="100vw"
+          />
+        </motion.div>
+
+        {/* Multi-stop overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(8,12,22,0.88) 0%, rgba(8,12,22,0.4) 40%, rgba(8,12,22,0.08) 100%)",
+          }}
+        />
       </div>
 
-      <div className="container relative z-10 mx-auto px-6 lg:px-12 text-center mt-10">
-        <h1
-          className="text-5xl md:text-7xl font-bold leading-tight mb-6 gold-shimmer"
-          style={{ fontFamily: "'Playfair Display', serif" }}
-          data-aos="fade-up"
+      {/* ── Main content — centered with glass panel ── */}
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-10 lg:px-16 py-24 sm:py-32">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="visible"
+          className="max-w-2xl lg:max-w-3xl mx-auto flex flex-col items-center text-center"
         >
-          Your Trusted Service Partner
-        </h1>
-        <p
-          className="text-lg md:text-2xl text-off-white mb-10 max-w-3xl mx-auto font-light"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          All Services Under One Roof -  Property, Visa, Travel, Legal & More
-        </p>
+          {/* Glass card */}
+          <div
+            className="rounded-2xl p-8 sm:p-10 lg:p-12"
+            style={{
+              background: "rgba(255, 255, 255, 0.06)",
+              backdropFilter: "blur(4px) saturate(180%)",
+              WebkitBackdropFilter: "blur(4px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.45)",
+              borderRadius: "20px",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.6), inset 0 -1px 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.25)",
+            }}
+          >
+          {/* Headline */}
+          <motion.h1
+            variants={fadeUp}
+            className="font-bold text-white leading-[1.06] tracking-tight mb-5 sm:mb-6"
+            style={{
+              fontFamily: "var(--font-poppins)",
+              fontSize: "clamp(2.2rem, 5.5vw, 3.8rem)",
+            }}
+          >
+            Explore the World
+            <br />
+            <span style={{ color: "#93C5FD" }}>with Confidence.</span>
+          </motion.h1>
 
-        <div
-          className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center mb-16"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          <Link href="#services" className="group px-8 py-4 rounded-full font-semibold border border-accent-gold/40 text-accent-gold hover:border-accent-gold hover:bg-accent-gold/5 transition-all duration-300 flex items-center justify-center gap-2 tracking-wide">
-            Explore Services
-            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-          </Link>
-          <Link href="#contact" className="px-8 py-4 rounded-full font-semibold bg-accent-gold text-primary hover:bg-light-gold transition-all duration-300 shadow-[0_0_25px_rgba(201,168,76,0.25)] hover:shadow-[0_0_35px_rgba(201,168,76,0.45)] tracking-wide">
-            Book Consultation
-          </Link>
-        </div>
+          {/* Sub-copy — service pills */}
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10"
+            style={{ fontFamily: "var(--font-inter)" }}
+          >
+            {["Property", "Visa & Immigration", "Tours & Travel", "Legal Docs", "Forex", "RTO"].map((tag) => (
+              <span
+                key={tag}
+                className="text-xs font-medium text-white/90 px-3 py-1 rounded-full"
+                style={{
+                  background: "rgba(255,255,255,0.12)",
+                  border: "1px solid rgba(255,255,255,0.25)",
+                }}
+              >
+                {tag}
+              </span>
+            ))}
+          </motion.div>
 
-        {/* Trust Badges */}
-        <div
-          className="flex flex-wrap justify-center gap-4 md:gap-8 opacity-80"
-          data-aos="fade-in"
-          data-aos-delay="400"
-        >
-          {badges.map((badge, idx) => (
-            <div key={idx} className="flex items-center gap-2 text-sm md:text-base font-medium">
-              <span className="text-accent-gold">{badge.icon}</span>
-              <span>{badge.name}</span>
-            </div>
-          ))}
-        </div>
+          {/* CTA row */}
+          <motion.div
+            variants={fadeUp}
+            className="flex flex-wrap justify-center gap-3 sm:gap-4"
+          >
+            <Link
+              href="/#contact"
+              className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white text-[#0F172A] text-sm font-semibold rounded hover:bg-white/90 active:scale-[0.98] transition-all duration-200"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              Get in Touch
+              <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="/#services"
+              className="inline-flex items-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 border border-white/25 text-white/85 text-sm font-medium rounded hover:border-white/50 hover:text-white hover:bg-white/[0.06] active:scale-[0.98] transition-all duration-200"
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              Our Services
+            </Link>
+          </motion.div>
+          </div>
+        </motion.div>
       </div>
+
+
     </section>
   );
 }

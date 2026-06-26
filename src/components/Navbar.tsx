@@ -1,166 +1,189 @@
-// "use client";
-// import { useState, useEffect } from "react";
-// import { Menu, X, Globe } from "lucide-react";
-// import Link from "next/link";
-
-// export default function Navbar() {
-//   const [isScrolled, setIsScrolled] = useState(false);
-//   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-//   useEffect(() => {
-//     const handleScroll = () => setIsScrolled(window.scrollY > 50);
-//     window.addEventListener("scroll", handleScroll);
-//     return () => window.removeEventListener("scroll", handleScroll);
-//   }, []);
-
-//   const navLinks = [
-//     { name: "Home", href: "#home" },
-//     { name: "Services", href: "#services" },
-//     { name: "About", href: "#about" },
-//     { name: "Why Us", href: "#why-us" },
-//     { name: "Contact", href: "#contact" },
-//   ];
-
-//   return (
-//     <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "glass-header py-4" : "bg-transparent py-6"}`}>
-//       <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center">
-//         {/* Logo */}
-//         <Link href="#home" className="flex items-center gap-2 group">
-//           <Globe className="text-[var(--color-accent-gold)] w-8 h-8 group-hover:rotate-180 transition-transform duration-700" />
-//           <div className="flex flex-col">
-//             <span className="font-heading text-2xl font-bold tracking-wider text-[var(--color-off-white)]">AAS TOUR & TRAVELS</span>
-//           </div>
-//         </Link>
-
-//         {/* Desktop Nav */}
-//         <div className="hidden lg:flex items-center gap-8">
-//           {navLinks.map((link) => (
-//             <Link key={link.name} href={link.href} className="text-sm font-medium hover:text-[var(--color-accent-gold)] transition-colors">
-//               {link.name}
-//             </Link>
-//           ))}
-//           <Link href="#contact" className="bg-[var(--color-accent-gold)] text-[var(--color-primary)] px-6 py-2 rounded font-semibold hover:bg-[var(--color-light-gold)] transition-colors">
-//             Get a Free Consultation
-//           </Link>
-//         </div>
-
-//         {/* Mobile Nav Toggle */}
-//         <button className="lg:hidden text-[var(--color-off-white)]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-//           {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-//         </button>
-//       </div>
-
-//       {/* Mobile Menu */}
-//       {isMobileMenuOpen && (
-//         <div className="lg:hidden absolute top-full left-0 w-full glass-header flex flex-col py-6 px-6 gap-4 border-t border-[rgba(201,168,76,0.1)]">
-//           {navLinks.map((link) => (
-//             <Link
-//               key={link.name}
-//               href={link.href}
-//               className="text-lg font-medium hover:text-[var(--color-accent-gold)]"
-//               onClick={() => setIsMobileMenuOpen(false)}
-//             >
-//               {link.name}
-//             </Link>
-//           ))}
-//           <Link
-//             href="#contact"
-//             className="bg-[var(--color-accent-gold)] text-[var(--color-primary)] px-6 py-3 rounded font-semibold text-center mt-4"
-//             onClick={() => setIsMobileMenuOpen(false)}
-//           >
-//             Get a Free Consultation
-//           </Link>
-//         </div>
-//       )}
-//     </nav>
-//   );
-// }
 "use client";
+
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+const navLinks = [
+  { name: "Home",     href: "/#home"     },
+  { name: "Services", href: "/#services" },
+  { name: "About",    href: "/#about"    },
+  { name: "Why Us",   href: "/#why-us"   },
+];
+
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled,       setIsScrolled]       = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const navLinks = [
-    { name: "Home", href: "#home" },
-    { name: "Services", href: "#services" },
-    { name: "About", href: "#about" },
-    { name: "Why Us", href: "#why-us" },
-    { name: "Contact", href: "#contact" },
-  ];
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setIsMobileMenuOpen(false);
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Prevent body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobileMenuOpen]);
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? "glass-header py-3" : "bg-transparent py-5"}`}>
-      <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center">
-        {/* Logo */}
-        <Link href="#home" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-[var(--color-accent-gold)] transition-transform duration-500 group-hover:scale-105 bg-white">
-            <Image
-              src="/logo.png"
-              alt="AAS Tour & Travels"
-              fill
-              sizes="(max-width: 768px) 40px, 48px"
-              className="object-contain"
-              priority
-            />
-          </div>
-          <div className="flex flex-col leading-tight">
-            <span className="font-heading text-lg md:text-2xl font-bold tracking-wider text-[var(--color-off-white)]">
-              AAS TOUR &amp; TRAVELS
-            </span>
-          </div>
-        </Link>
+    <>
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? "bg-white shadow-md border-b border-gray-100 py-3"
+            : "bg-transparent py-5"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-5 lg:px-10 flex items-center justify-between relative">
 
-        {/* Desktop Nav */}
-        <div className="hidden lg:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link key={link.name} href={link.href} className="text-sm font-medium hover:text-[var(--color-accent-gold)] transition-colors">
-              {link.name}
-            </Link>
-          ))}
-          <Link href="#contact" className="bg-[var(--color-accent-gold)] text-[var(--color-primary)] px-6 py-2 rounded-full font-semibold hover:bg-[var(--color-light-gold)] transition-colors">
-            Get a Free Consultation
-          </Link>
-        </div>
-
-        {/* Mobile Nav Toggle */}
-        <button className="lg:hidden text-[var(--color-off-white)]" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 w-full glass-header flex flex-col py-6 px-6 gap-4 border-t border-[rgba(201,168,76,0.1)]">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className="text-lg font-medium hover:text-[var(--color-accent-gold)]"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {link.name}
-            </Link>
-          ))}
+          {/* ── Logo ── */}
           <Link
-            href="#contact"
-            className="bg-[var(--color-accent-gold)] text-[var(--color-primary)] px-6 py-3 rounded-full font-semibold text-center mt-4"
-            onClick={() => setIsMobileMenuOpen(false)}
+            href="/#home"
+            className="flex items-center gap-2.5 flex-shrink-0"
+            aria-label="AAS Tour & Travels — Home"
           >
-            Get a Free Consultation
+            <div className={`relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border transition-all duration-300 ${
+              isScrolled ? "border-gray-200" : "border-white/30"
+            }`}>
+              <Image
+                src="/logo.png"
+                alt="AAS Tour & Travels"
+                fill
+                sizes="48px"
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span
+              className={`font-extrabold text-2xl tracking-tight transition-colors duration-300 ${
+                isScrolled ? "text-[#0F172A]" : "text-white drop-shadow-md"
+              }`}
+              style={{ fontFamily: "var(--font-poppins)" }}
+            >
+              AAS Tour &amp; Travels
+            </span>
           </Link>
+
+          {/* ── Desktop Nav Links — absolutely centered ── */}
+          <div className="hidden lg:flex items-center gap-7 absolute left-1/2 -translate-x-1/2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                className={`relative text-sm font-bold transition-colors duration-200 group ${
+                  isScrolled
+                    ? "text-black hover:text-gray-600"
+                    : "text-black hover:text-gray-600"
+                }`}
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                {link.name}
+                <span
+                  className={`absolute -bottom-0.5 left-0 h-[1.5px] w-0 rounded-full transition-all duration-300 group-hover:w-full ${
+                    isScrolled ? "bg-[#0EA5E9]" : "bg-white"
+                  }`}
+                />
+              </Link>
+            ))}
+          </div>
+
+          {/* ── Desktop CTA ── */}
+          <div className="hidden lg:flex items-center">
+            <Link
+              href="/#contact"
+              className={`text-sm font-semibold px-5 py-2 rounded border transition-all duration-200 ${
+                isScrolled
+                  ? "bg-[#0F172A] text-white border-[#0F172A] hover:bg-[#1E293B]"
+                  : "bg-white text-[#0F172A] border-white hover:bg-white/90"
+              }`}
+              style={{ fontFamily: "var(--font-inter)" }}
+            >
+              Contact Us
+            </Link>
+          </div>
+
+          {/* ── Mobile Hamburger ── */}
+          <button
+            className={`lg:hidden p-2 rounded transition-colors ${
+              isScrolled ? "text-[#0F172A]" : "text-white"
+            }`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
+
+      </nav>
+
+      {/* ── Mobile Menu ── */}
+      {isMobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-black/30 lg:hidden"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          {/* Dropdown panel */}
+          <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-lg lg:hidden pt-[64px]">
+            {/* Header row with close */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <span
+                className="text-sm font-semibold text-[#64748B] uppercase tracking-widest"
+                style={{ fontFamily: "var(--font-inter)" }}
+              >
+                Menu
+              </span>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[#64748B] hover:text-[#0F172A] transition-colors"
+                aria-label="Close menu"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Links */}
+            <nav className="px-5 py-3 flex flex-col">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className="py-3 text-[15px] font-medium text-[#1E293B] hover:text-[#0EA5E9] border-b border-gray-50 last:border-none transition-colors"
+                  style={{ fontFamily: "var(--font-inter)" }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* CTA */}
+            <div className="px-5 pb-6 pt-2">
+              <Link
+                href="/#contact"
+                className="block w-full text-center text-sm font-semibold py-3 rounded bg-[#0F172A] text-white hover:bg-[#1E293B] transition-colors"
+                style={{ fontFamily: "var(--font-inter)" }}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact Us
+              </Link>
+            </div>
+          </div>
+        </>
       )}
-    </nav>
+    </>
   );
 }
