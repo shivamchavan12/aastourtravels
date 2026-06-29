@@ -38,7 +38,12 @@ export const metadata: Metadata = {
     "AAS Tour Travels",
   ],
   icons: {
-    apple: "/logo2.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-32x32.png", type: "image/png", sizes: "32x32" },
+      { url: "/favicon-96x96.png", type: "image/png", sizes: "96x96" },
+    ],
+    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "AAS Tour & Travels",
